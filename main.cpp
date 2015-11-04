@@ -5,6 +5,8 @@
 
 int main(int argc, char * argv[])
 {
-	run_cmd();
+	string output = run_cmd();
+	printf("%s", output.c_str());
+
 	return 0;
 }

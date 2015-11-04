@@ -1,2 +1,5 @@
+#include <string>
 
-void run_cmd();
+using namespace std;
+
+string run_cmd();
