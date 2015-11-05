@@ -2,4 +2,4 @@
 
 using namespace std;
 
-string run_cmd();
+string run_cmd(const char * path, ...);

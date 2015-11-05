@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdarg.h>
 
 
 static string readFromPipe(int pipefd) {
@@ -24,17 +25,37 @@ static string readFromPipe(int pipefd) {
 	return output;
 }
 
-static void execCmd() {
+static void execCmd(const char * path, char * argv[]) {
 
-	execl("/bin/ls", "ls", "-l", (char *)0);
+	execv(path, argv);
 
 	// We only get here in case of errors
 	printf("Could not execute logcat: %s", strerror(errno));
 	return;
 }
 
-string run_cmd()
+string run_cmd(const char * path, ...)
 {
+	char * argv[20] = {0};		//max args
+	int argc = 0;
+
+	va_list args;
+	va_start(args, path);
+	while(true)
+	{
+		char * param = va_arg(args, char *);
+		if(param == (char*)0)
+			break;
+
+		argv[argc++] = param;
+	}
+	va_end(args);
+/*
+	for(int i = 0; i < argc; i++)
+	{
+		printf("%s\n", argv[i]);
+	}
+*/
 	int pipeFds[2];
 	if (pipe(pipeFds) < 0) {
 		
@@ -60,6 +81,6 @@ string run_cmd()
 		}
 
 		//here will never return
-		execCmd();
+		execCmd(path, argv);
 	}
 }
